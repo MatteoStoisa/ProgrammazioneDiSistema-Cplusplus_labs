@@ -4,8 +4,19 @@
 #include <vector>
 
 #include "Directory.h"
-//#include "File.h"
+
+extern bool existRoot;
 
 Directory::Directory() {
     std::cout<<"Directory constructor\n";
-}; //classe sigleton: costruttore protetto
+}
+
+std::shared_ptr<Directory> Directory::getRoot() {
+    if(existRoot == true)
+        return NULL;
+    else {
+        existRoot = true;
+        std::shared_ptr<Directory> newRoot(new Directory());
+        return newRoot;
+    }
+}
