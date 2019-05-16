@@ -14,6 +14,10 @@ void Base::setName(std::string nome) {
     return;
 }
 
+int Base::mType() const {
+    return 1;
+}
+
 Base::Base() = default;
 
 Base::~Base() = default;

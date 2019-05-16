@@ -14,6 +14,10 @@ File::File(std::string nome,size_t dim) {
     this->size = dim;
 }
 
+int File::mType() const {
+    return 0;
+}
+
 File::~File() = default;
 
 /*void File::ls (int indent=0) const {

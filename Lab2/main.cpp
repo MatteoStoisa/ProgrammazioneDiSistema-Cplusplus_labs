@@ -19,6 +19,8 @@ int main() {
     root = Directory::getRoot();
     root->Directory::addDirectory("directory1");
     root->Directory::addFile("file1",100);
+    root->Directory::addFile("file2",200);
+    std::cout<<root->Directory::get("file1").get()->getName();
 
     return 0;
 }

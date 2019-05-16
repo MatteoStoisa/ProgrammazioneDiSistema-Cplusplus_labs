@@ -3,16 +3,18 @@
 
 #include "Base.h"
 
-class File:Base {
+class File: public Base {
 private:
     size_t size;
 public:
     uintmax_t getSize () const;
 
+    int mType() const override;
     //void ls (int) const override;
 
     File(std::string,size_t);
     ~File();
+
 };
 
 #endif
