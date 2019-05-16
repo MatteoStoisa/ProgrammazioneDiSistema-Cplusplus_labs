@@ -11,14 +11,14 @@
 #include "Directory.h"
 #include "File.h"
 
-bool existRoot;
+std::shared_ptr<Directory> root;
 
 int main() {
-    existRoot = false;
     std::cout << "--- Lab2 ---" << std::endl;
 
-    std::shared_ptr<Directory> root = Directory::getRoot();
-    std::cout<<"Root creata\n";
+    root = Directory::getRoot();
+    root->Directory::addDirectory("directory1");
+    root->Directory::addFile("file1",100);
 
     return 0;
 }

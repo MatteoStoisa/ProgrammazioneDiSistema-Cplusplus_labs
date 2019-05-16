@@ -5,11 +5,15 @@
 
 #include "Base.h"
 
-Base::Base() {
-    std::cout<<"Base constructor\n";
-}
-
 std::string Base::getName() const {
     return this->name;
 }
 
+void Base::setName(std::string nome) {
+    this->name = nome;
+    return;
+}
+
+Base::Base() = default;
+
+Base::~Base() = default;

@@ -5,13 +5,16 @@
 
 #include "File.h"
 
-File::File() {
-    std::cout<<"File constructor\n";
-}
-
 uintmax_t File::getSize () const {
     return this->size;
 }
+
+File::File(std::string nome,size_t dim) {
+    this->name = nome;
+    this->size = dim;
+}
+
+File::~File() = default;
 
 /*void File::ls (int indent=0) const {
     std::cout<<"File name "<<this->getName()<<" size "<<this->size;

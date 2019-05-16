@@ -7,9 +7,12 @@ class File:Base {
 private:
     size_t size;
 public:
-    File();
     uintmax_t getSize () const;
+
     //void ls (int) const override;
+
+    File(std::string,size_t);
+    ~File();
 };
 
 #endif

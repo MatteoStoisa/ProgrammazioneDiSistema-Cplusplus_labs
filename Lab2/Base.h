@@ -3,13 +3,18 @@
 
 class Base {
 private:
-    std::string name;
 public:
-    Base();
+    friend class Directory;
+
+    std::string name;
 
     std::string getName () const;
-    //virtual int mType () const = 0;
+    void setName(std::string);
+    //virtual int mType () const;
     //virtual void ls (int indent=0) const = 0;
+
+    Base();
+    ~Base();
 };
 
 #endif
