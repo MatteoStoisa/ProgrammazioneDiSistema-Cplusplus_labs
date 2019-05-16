@@ -11,8 +11,6 @@
 #include "Directory.h"
 #include "File.h"
 
-std::shared_ptr<Directory> root;
-
 int main() {
     std::cout << "--- Lab2 ---\n" << std::endl;
 
