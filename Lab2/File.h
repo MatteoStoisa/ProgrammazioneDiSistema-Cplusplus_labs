@@ -10,7 +10,7 @@ public:
     uintmax_t getSize () const;
 
     int mType() const override;
-    //void ls (int) const override;
+    void ls (int) const override;
 
     File(std::string,size_t);
     ~File();

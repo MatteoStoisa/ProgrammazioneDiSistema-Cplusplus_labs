@@ -14,13 +14,15 @@
 std::shared_ptr<Directory> root;
 
 int main() {
-    std::cout << "--- Lab2 ---" << std::endl;
+    std::cout << "--- Lab2 ---\n" << std::endl;
 
-    root = Directory::getRoot();
-    root->Directory::addDirectory("directory1");
-    root->Directory::addFile("file1",100);
-    root->Directory::addFile("file2",200);
-    std::cout<<root->Directory::get("file1").get()->getName();
+    std :: shared_ptr < Directory > root = Directory ::getRoot();
+    auto alfa = root -> addDirectory( "alfa" );
+    alfa -> addDirectory( "beta" )->addFile( "beta1" , 100 );
+    alfa -> getDir( "beta" ) -> addFile( "beta2" , 200 );
+    alfa -> getDir( ".." ) -> ls();
+    alfa -> remove( "beta" );
+    root -> ls();
 
     return 0;
 }

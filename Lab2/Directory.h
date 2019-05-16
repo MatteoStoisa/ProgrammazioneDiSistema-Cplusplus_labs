@@ -22,6 +22,7 @@ public:
     //miscellaneous
     Directory &operator=(Directory *d);
     int mType() const override;
+    ~Directory();
 
     static std::shared_ptr<Directory> root;
     static std::shared_ptr<Directory> getRoot();
@@ -31,12 +32,12 @@ public:
     std::shared_ptr<Directory> getDir (std::string);
     std::shared_ptr<File> getFile (std::string);
     void remove (std::string);
+    void ls (int indent = 0) const override;
 
 protected:
     Directory();
-    Directory(std::string); //explicit (?)
+    explicit Directory(std::string);
 
-    //~Directory();
 };
 
 #endif

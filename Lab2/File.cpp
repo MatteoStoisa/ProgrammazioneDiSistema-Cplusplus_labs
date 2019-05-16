@@ -15,11 +15,11 @@ File::File(std::string nome,size_t dim) {
 }
 
 int File::mType() const {
-    return 0;
+    return 2;
 }
 
 File::~File() = default;
 
-/*void File::ls (int indent=0) const {
+void File::ls (int indent=0) const {
     std::cout<<"File name "<<this->getName()<<" size "<<this->size;
-}*/
+}

@@ -4,13 +4,14 @@
 #include <vector>
 #include <map>
 
+
 #include "Directory.h"
 
 std::shared_ptr<Directory> Directory::root;
 
 Directory::Directory() = default;
 
-//Directory::~Directory() = default;
+Directory::~Directory() = default;
 
 //getter
 
@@ -41,7 +42,7 @@ Directory &Directory::operator=(Directory *) {
 }
 
 int Directory::mType() const {
-    return 0;
+    return 1;
 }
 
 Directory::Directory(std::string name) {
@@ -55,7 +56,6 @@ std::shared_ptr<Directory> Directory::getRoot() {
         Directory::root = std::shared_ptr<Directory>(new Directory("/"));
         Directory::root.get()->setSelfPointer(Directory::root);
         Directory::root.get()->setFatherPointer(Directory::root);
-        std::cout<<"Root creata\n";
     }
     return root;
 }
@@ -65,23 +65,21 @@ std::shared_ptr<Directory> Directory::addDirectory (std::string nome) {
     newDirectoryPtr->setSelfPointer(newDirectoryPtr);
     newDirectoryPtr->setFatherPointer(this->getSelfPointer());
     this->innerPointers.insert({nome,newDirectoryPtr});
-    std::cout<<"aggiunta directory "<<nome<<"\n";
     return newDirectoryPtr;
 }
 
 std::shared_ptr<File> Directory::addFile (std::string nome, uintmax_t size) {
     std::shared_ptr<File> newFilePtr = std::shared_ptr<File>(new File(nome,size));
     this->innerPointers.insert({nome,newFilePtr});
-    std::cout<<"aggiunto file "<<nome<<"\n";
     return newFilePtr;
 }
 
 std::shared_ptr<Base> Directory::get (std::string nome) {
-    if (nome.compare((".."))) {
+    if (nome == "..") {
         return this->getFatherPointer();
     }
 
-    if (nome.compare(".")) {
+    if (nome == ".") {
         return this->getSelfPointer();
     }
     try {
@@ -97,10 +95,10 @@ std::shared_ptr<Base> Directory::get (std::string nome) {
 }
 
 std::shared_ptr<Directory> Directory::getDir (std::string nome) {
-    if (nome.compare((".."))) {
+    if (nome == "..") {
         return this->getFatherPointer();
     }
-    if (nome.compare(".")) {
+    if (nome == ".") {
         return this->getSelfPointer();
     }
     try {
@@ -130,11 +128,35 @@ std::shared_ptr<File> Directory::getFile (std::string nome) {
 
 void Directory::remove (std::string nome) {
     try {
+        if(nome == "." || nome == "..")
+            throw("...");
         if(this->innerPointers.find(nome) == innerPointers.end())
             throw(nome);
         this->innerPointers.erase(nome);
     }
     catch(std::string nome) {
-        //TODO: non-stupid exception
+        //if(nome == "...")
+        //TODO: write some non-stupid exception
     }
+}
+
+void Directory::ls (int indent) const {
+    if(indent == 0) {
+        std::cout << "--- ls ---\n";
+        std::cout << "[+] " << this->getName() << "\n";
+        indent+=6;
+    }
+    for (std::map<std::string,std::shared_ptr<Base>>::const_iterator it = this->innerPointers.begin(); it != this->innerPointers.end(); ++it)
+    {
+        for(int i=0;i<indent;i++)
+            std::cout<<" ";
+        if(it->second->mType() == 1) {
+            std::cout<< "[+] " << it->second->getName()<<"\n";
+            it->second->ls(indent + 6);
+        }
+        else {
+            std::cout<<it->second->getName()<<"\n";
+        }
+    }
+    return;
 }

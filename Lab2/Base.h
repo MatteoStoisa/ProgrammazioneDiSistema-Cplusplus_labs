@@ -11,7 +11,7 @@ public:
     std::string getName () const;
     void setName(std::string);
     virtual int mType () const;
-    //virtual void ls (int indent=0) const = 0;
+    virtual void ls (int indent) const = 0;
 
 
     Base();
