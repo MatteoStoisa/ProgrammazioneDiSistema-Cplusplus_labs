@@ -1,1 +1,4 @@
-# ProgrammazioneDiSistemaC-
+# ProgrammazioneDiSistema
+
+Programmazione C++
+Laboratori
