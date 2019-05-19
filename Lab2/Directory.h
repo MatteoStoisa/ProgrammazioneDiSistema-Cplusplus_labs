@@ -7,7 +7,8 @@
 
 class Directory: public Base {
 private:
-    std::map<std::string,std::shared_ptr<Base>> innerPointers;
+    std::map<std::string,std::shared_ptr<Directory>> innerDirectoryPointers;
+    std::map<std::string,std::shared_ptr<File>> innerFilePointers;
     std::weak_ptr<Directory> selfPointer; //come si fa??
     std::weak_ptr<Directory> fatherPointer;
 
@@ -33,6 +34,8 @@ public:
     std::shared_ptr<File> getFile (std::string);
     void remove (std::string);
     void ls (int indent = 0) const override;
+
+    void recoursiveDelete();
 
 protected:
     Directory();

@@ -13,7 +13,6 @@ public:
     virtual int mType () const;
     virtual void ls (int indent) const = 0;
 
-
     Base();
     ~Base();
 };

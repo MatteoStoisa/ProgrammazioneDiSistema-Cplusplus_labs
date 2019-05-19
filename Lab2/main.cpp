@@ -15,6 +15,7 @@ int main() {
     std::cout << "--- Lab2 ---\n" << std::endl;
 
     std :: shared_ptr < Directory > root = Directory ::getRoot();
+    std :: shared_ptr < Directory > root2 = Directory ::getRoot();
     auto alfa = root -> addDirectory( "alfa" );
     alfa -> addDirectory( "beta" )->addFile( "beta1" , 100 );
     alfa -> getDir( "beta" ) -> addFile( "beta2" , 200 );
