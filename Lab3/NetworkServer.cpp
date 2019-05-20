@@ -20,16 +20,15 @@ void NetworkServer::incrementSharedEditor() {
 
 int NetworkServer::connect(SharedEditor* sharedEditor) {
     this->counterSharedEditor++;
-    this->sharedEditorPointers.insert({this->counterSharedEditor,std::shared_ptr<SharedEditor>(sharedEditor)});
+    this->sharedEditorPointers.push_back(std::shared_ptr<SharedEditor>(sharedEditor));
     return this->counterSharedEditor;
 }
 
 void NetworkServer::disconnect(SharedEditor* sharedEditor) {
-    for(auto it = this->sharedEditorPointers.begin();it == this->sharedEditorPointers.end();++it) {
-        if(this->sharedEditorPointers.find(it)->second == sharedEditor) {
-            this->sharedEditorPointers.erase(it);
-            std::cout<<"Editor Disconnected correctly"<<std::endl;
-        }
+    auto it = std::find(this->sharedEditorPointers.begin(),this->sharedEditorPointers.end(),std::shared_ptr<SharedEditor>(sharedEditor));
+    if(it != this->sharedEditorPointers.end()){
+        this->sharedEditorPointers.erase(it);
+        std::cout<<"Editor Disconnected correctly"<<std::endl;
     }
 }
 
@@ -41,10 +40,10 @@ void NetworkServer::dispatchMessages() {
     Message temp;
     while(this->messageStack.empty()) {
         temp = this->messageStack.top();
+        this->messageStack.pop();
         for(auto it = this->sharedEditorPointers.begin();it == this->sharedEditorPointers.end();++it) {
-            if(temp.getSourceMessage() != this->sharedEditorPointers.at(it)) {
+            if(temp.getSourceMessage() != this->sharedEditorPointers[it].) {
                 this->sharedEditorPointers.find(it)->getMessage(temp);
-                this->messageStack.pop();
             }
 
         }

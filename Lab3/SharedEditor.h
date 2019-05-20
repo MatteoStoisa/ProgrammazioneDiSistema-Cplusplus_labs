@@ -3,7 +3,6 @@
 
 #include <memory>
 
-#include "NetworkServer.h"
 #include "Symbol.h"
 #include "Message.h"
 
@@ -11,7 +10,7 @@ class SharedEditor {
 private:
     int idSharedEditor;
 public:
-    SharedEditor(NetworkServer);
+    SharedEditor();
     ~SharedEditor();
 
     int getCodScharedEditor();

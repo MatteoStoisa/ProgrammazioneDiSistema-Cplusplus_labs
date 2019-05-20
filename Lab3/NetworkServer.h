@@ -1,7 +1,6 @@
 #ifndef LAB3_NETWORKSERVER_H
 #define LAB3_NETWORKSERVER_H
 
-#include <bits/shared_ptr.h>
 #include <vector>
 #include <stack>
 #include <map>
@@ -12,8 +11,7 @@
 
 class NetworkServer {
 private:
-    std::map<int,std::shared_ptr<SharedEditor>> sharedEditorPointers;
-    //std::vector<std::shared_ptr<SharedEditor>> sharedEditorPointers;
+    std::vector<std::shared_ptr<SharedEditor>> sharedEditorPointers;
     std::stack<Message> messageStack;
     int counterSharedEditor;
 public:

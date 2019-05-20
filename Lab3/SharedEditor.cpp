@@ -1,5 +1,7 @@
 #include "SharedEditor.h"
+
 #include "NetworkServer.h"
+
 
 SharedEditor::SharedEditor(NetworkServer networkServer) {
     networkServer.incrementSharedEditor();
@@ -13,5 +15,5 @@ int SharedEditor::getCodScharedEditor() {
 }
 
 void SharedEditor::getMessage(Message) {
-    //TODO: fa cose
+    //TODO: do stuffs
 }
