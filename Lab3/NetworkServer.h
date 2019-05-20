@@ -6,6 +6,8 @@
 #include <map>
 #include <memory>
 
+#pragma once
+
 #include "SharedEditor.h"
 #include "Message.h"
 
@@ -14,6 +16,7 @@ private:
     std::vector<std::shared_ptr<SharedEditor>> sharedEditorPointers;
     std::stack<Message> messageStack;
     int counterSharedEditor;
+    int idSharedEditor;
 public:
     NetworkServer();
     ~NetworkServer();

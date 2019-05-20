@@ -1,5 +1,5 @@
 #include "Message.h"
 
-int Message::getSourceMessage() {
+int Message::getSourceIdMessage() {
     return this->sourceSharedEditor;
 }

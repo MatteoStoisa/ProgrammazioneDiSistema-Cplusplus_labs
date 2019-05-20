@@ -1,19 +1,16 @@
 #include "SharedEditor.h"
 
-#include "NetworkServer.h"
-
-
-SharedEditor::SharedEditor(NetworkServer networkServer) {
-    networkServer.incrementSharedEditor();
-    idSharedEditor = networkServer.getCounterSharedNetwork();
-};
-
+SharedEditor::SharedEditor() = default;
 SharedEditor::~SharedEditor() = default;
 
-int SharedEditor::getCodScharedEditor() {
+int SharedEditor::getIdScharedEditor() {
     return this->idSharedEditor;
 }
 
 void SharedEditor::getMessage(Message) {
     //TODO: do stuffs
+}
+
+void SharedEditor::setIdSharedEditor(int id) {
+    this->idSharedEditor = id;
 }

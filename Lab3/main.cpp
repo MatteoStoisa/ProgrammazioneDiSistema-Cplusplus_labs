@@ -1,6 +1,4 @@
 #include <iostream>
-#include "NetworkServer.h"
-#include "SharedEditor.h"
 
 int main() {
     std::cout << "--- Lab3 ---\n";
