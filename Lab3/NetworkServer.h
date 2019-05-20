@@ -3,21 +3,23 @@
 
 #include <bits/shared_ptr.h>
 #include <vector>
-#include <map>
 #include <stack>
 
 #include "SharedEditor.h"
-#include "message.h"
+#include "Message.h"
 
-std::map<int, std::shared_ptr<SharedEditor>> sharedEditorPointers; //why not working??
+std::vector<std::shared_ptr<SharedEditor>> sharedEditorPointers;
 std::stack<Message> messageStack;
 
-int codSharedEditor;
+int counterSharedEditor = 0;
 
 class NetworkServer {
 private:
 
 public:
+    NetworkServer();
+    ~NetworkServer();
+
     int connect(SharedEditor*);
 };
 
