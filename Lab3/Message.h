@@ -3,7 +3,10 @@
 
 
 class Message {
-
+private:
+    int sourceSharedEditor;
+public:
+    int getSourceMessage();
 };
 
 

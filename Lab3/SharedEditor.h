@@ -1,16 +1,21 @@
 #ifndef LAB3_SHAREDEDITOR_H
 #define LAB3_SHAREDEDITOR_H
 
-int codSharedEditor;
+#include <memory>
+
+#include "NetworkServer.h"
+#include "Symbol.h"
+#include "Message.h"
 
 class SharedEditor {
 private:
-
+    int idSharedEditor;
 public:
-    SharedEditor();
+    SharedEditor(NetworkServer);
     ~SharedEditor();
 
     int getCodScharedEditor();
+    void getMessage(Message);
 };
 
 
