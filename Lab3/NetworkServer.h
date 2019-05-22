@@ -2,31 +2,28 @@
 #define LAB3_NETWORKSERVER_H
 
 #include <vector>
-#include <stack>
 #include <map>
 #include <memory>
-
-#pragma once
 
 #include "SharedEditor.h"
 #include "Message.h"
 
 class NetworkServer {
 private:
-    std::vector<std::shared_ptr<SharedEditor>> sharedEditorPointers;
-    std::stack<Message> messageStack;
-    int counterSharedEditor;
-    int idSharedEditor;
+    std::map<int,std::shared_ptr<SharedEditor>> sharedEditorPointers;
+    std::vector<Message> messageVector;
+
+    int idSharedEditorGenerator;
 public:
     NetworkServer();
     ~NetworkServer();
 
-    int getCounterSharedNetwork();
+    int generateIdSharedNetwork();
     void incrementSharedEditor();
 
     int connect(SharedEditor*);
-    void disconnect(SharedEditor* sharedEditor);
-    void send(const Message& m);
+    void disconnect(SharedEditor*);
+    void send(const Message&);
     void dispatchMessages();
 };
 

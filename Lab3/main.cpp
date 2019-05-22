@@ -1,5 +1,8 @@
 #include <iostream>
 
+#include "NetworkServer.h"
+#include "NetworkServer.h"
+
 int main() {
     std::cout << "--- Lab3 ---\n";
 

@@ -4,56 +4,35 @@
 #include <iostream>
 
 NetworkServer::NetworkServer() {
-    this->counterSharedEditor = 0;
-    this->idSharedEditor = 0;
+    this->idSharedEditorGenerator = 0;
 }
 
 NetworkServer::~NetworkServer() = default;
 
-int NetworkServer::getCounterSharedNetwork() {
-    return this->counterSharedEditor;
+int NetworkServer::generateIdSharedNetwork() {
+    return this->idSharedEditorGenerator;
 }
 
 void NetworkServer::incrementSharedEditor() {
-    this->counterSharedEditor++;
+    this->idSharedEditorGenerator++;
 }
 
 
 int NetworkServer::connect(SharedEditor* sharedEditor) {
-    this->counterSharedEditor++;
-    sharedEditor->setIdSharedEditor(this->idSharedEditor);
-    this->idSharedEditor++;
-    this->sharedEditorPointers.insert(this->sharedEditorPointers.end(), std::shared_ptr<SharedEditor>(sharedEditor));
-    return this->counterSharedEditor;
+    sharedEditor->setIdSharedEditor(this->idSharedEditorGenerator);
+    this->sharedEditorPointers.insert({this->idSharedEditorGenerator, std::shared_ptr<SharedEditor>(sharedEditor)});
+    this->incrementSharedEditor();
+    return sharedEditor->getIdScharedEditor();
 }
 
 void NetworkServer::disconnect(SharedEditor* sharedEditor) {
-    auto it = std::find(this->sharedEditorPointers.begin(),this->sharedEditorPointers.end(),std::shared_ptr<SharedEditor>(sharedEditor));
-    if(it != this->sharedEditorPointers.end()){
-        if(sharedEditor->getIdScharedEditor() == it->get()->getIdScharedEditor()) {
-            this->sharedEditorPointers.erase(it);
-            std::cout << "Editor Disconnected correctly" << std::endl;
-        }
-    }
+    this->sharedEditorPointers.erase(sharedEditor->getIdScharedEditor());
 }
 
 void NetworkServer::send(const Message& m) {
-    this->messageStack.push(m);
+    this->messageVector.push_back(m);
 }
 
 void NetworkServer::dispatchMessages() {
-    Message temp;
-    while(this->messageStack.empty()) {
-        temp = this->messageStack.top();
-        this->messageStack.pop();
-        //auto it = std::find(this->sharedEditorPointers.begin(),this->sharedEditorPointers.end(),std::shared_ptr<SharedEditor>(sharedEditor));
-        for(std::vector<std::shared_ptr<SharedEditor>>::iterator it = this->sharedEditorPointers.begin();
-            it != this->sharedEditorPointers.end();
-            ++it) {
-            if (temp.getSourceIdMessage() == it->get()->getIdScharedEditor()) {
-                it->get()->getMessage(temp);
-                std::cout << "Editor Disconnected correctly" << std::endl;
-            }
-        }
-    }
+    //TODO: doppio iteratore in sharedEditorPointers e messageVector
 }

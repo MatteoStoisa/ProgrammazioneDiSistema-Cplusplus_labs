@@ -2,11 +2,7 @@
 #define LAB3_SHAREDEDITOR_H
 
 #include <memory>
-#include <ntsecapi.h>
 
-#pragma once
-
-//#include "NetworkServer.h"
 #include "Symbol.h"
 #include "Message.h"
 
@@ -18,8 +14,10 @@ public:
     ~SharedEditor();
 
     int getIdScharedEditor();
-    void getMessage(Message);
     void setIdSharedEditor(int);
+
+    void receiveMessage(Message);
+
 };
 
 
