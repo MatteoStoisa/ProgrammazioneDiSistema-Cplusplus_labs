@@ -22,6 +22,7 @@ int NetworkServer::connect(SharedEditor* sharedEditor) {
     sharedEditor->setIdSharedEditor(this->idSharedEditorGenerator);
     this->sharedEditorPointers.insert({this->idSharedEditorGenerator, std::shared_ptr<SharedEditor>(sharedEditor)});
     this->incrementSharedEditor();
+    sharedEditor->initSRDT();
     return sharedEditor->getIdScharedEditor();
 }
 

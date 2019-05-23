@@ -26,6 +26,8 @@ public:
 
     void receiveMessage(Message);
 
+    void initSRDT();
+
     void localInsert(int,char);
 
     std::vector<int> calculateNewSRDT(int, std::vector<Symbol>);
