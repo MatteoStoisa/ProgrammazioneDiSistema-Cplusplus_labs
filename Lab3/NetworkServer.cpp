@@ -19,14 +19,14 @@ void NetworkServer::incrementSharedEditor() {
 
 
 int NetworkServer::connect(SharedEditor* sharedEditor) {
-    sharedEditor->idSharedEditor = this->idSharedEditorGenerator;
+    sharedEditor->setIdSharedEditor(this->idSharedEditorGenerator);
     this->sharedEditorPointers.insert({this->idSharedEditorGenerator, std::shared_ptr<SharedEditor>(sharedEditor)});
     this->incrementSharedEditor();
-    return sharedEditor->idSharedEditor;
+    return sharedEditor->getIdScharedEditor();
 }
 
 void NetworkServer::disconnect(SharedEditor* sharedEditor) {
-    this->sharedEditorPointers.erase(sharedEditor->idSharedEditor);
+    this->sharedEditorPointers.erase(sharedEditor->getIdScharedEditor());
 }
 
 void NetworkServer::send(const Message& m) {

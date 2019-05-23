@@ -8,6 +8,8 @@
 #include "SharedEditor.h"
 #include "Message.h"
 
+class SharedEditor;
+
 class NetworkServer {
 private:
     std::map<int,std::shared_ptr<SharedEditor>> sharedEditorPointers;

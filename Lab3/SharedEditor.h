@@ -5,16 +5,26 @@
 
 #include "Symbol.h"
 #include "Message.h"
+#include "NetworkServer.h"
+
+class NetworkServer;
 
 class SharedEditor {
 private:
+    NetworkServer& _server;
+    int _siteId;
+    std::vector<Symbol> _symbols;
+    int _counter;
 public:
-    SharedEditor();
+    SharedEditor(NetworkServer&);
     ~SharedEditor();
 
-    int idSharedEditor;
+    int getIdScharedEditor();
+    void setIdSharedEditor(int);
+
     void receiveMessage(Message);
 
+    void localInsert(int,char);
 };
 
 
