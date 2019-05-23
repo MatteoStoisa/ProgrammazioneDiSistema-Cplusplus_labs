@@ -20,12 +20,16 @@ public:
     ~SharedEditor();
 
     int getIdScharedEditor();
+    int getCounterSharedEditor();
+    void incrementCounterSharedEditor();
     void setIdSharedEditor(int);
 
     void receiveMessage(Message);
 
     void localInsert(int,char);
-};
+
+    std::vector<int> calculateNewSRDT(int, std::vector<Symbol>);
+    };
 
 
 #endif

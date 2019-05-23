@@ -7,6 +7,9 @@ class Symbol {
 private:
 
 public:
+    Symbol(char,int,int,std::vector<int>);
+    ~Symbol();
+
     char symbol;
     int symbolSourceId;
     int symbolSourceCounter;
