@@ -8,14 +8,11 @@
 
 class SharedEditor {
 private:
-    int idSharedEditor;
 public:
     SharedEditor();
     ~SharedEditor();
 
-    int getIdScharedEditor();
-    void setIdSharedEditor(int);
-
+    int idSharedEditor;
     void receiveMessage(Message);
 
 };

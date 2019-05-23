@@ -19,14 +19,14 @@ void NetworkServer::incrementSharedEditor() {
 
 
 int NetworkServer::connect(SharedEditor* sharedEditor) {
-    sharedEditor->setIdSharedEditor(this->idSharedEditorGenerator);
+    sharedEditor->idSharedEditor = this->idSharedEditorGenerator;
     this->sharedEditorPointers.insert({this->idSharedEditorGenerator, std::shared_ptr<SharedEditor>(sharedEditor)});
     this->incrementSharedEditor();
-    return sharedEditor->getIdScharedEditor();
+    return sharedEditor->idSharedEditor;
 }
 
 void NetworkServer::disconnect(SharedEditor* sharedEditor) {
-    this->sharedEditorPointers.erase(sharedEditor->getIdScharedEditor());
+    this->sharedEditorPointers.erase(sharedEditor->idSharedEditor);
 }
 
 void NetworkServer::send(const Message& m) {
@@ -34,5 +34,12 @@ void NetworkServer::send(const Message& m) {
 }
 
 void NetworkServer::dispatchMessages() {
-    //TODO: doppio iteratore in sharedEditorPointers e messageVector
+    for(auto itM = std::vector<Message>::iterator(); itM != this->messageVector.end(); ++itM) { //TODO: check it works with vector or change in stack
+        for(auto itS = std::map<int,std::shared_ptr<SharedEditor>>::iterator(); itS != this->sharedEditorPointers.end(); ++itS) {
+            if(itM->getSourceIdMessage() != itS->first) {
+                itS->second->receiveMessage(*itM);
+                this->messageVector.erase(itM);
+            }
+        }
+    }
 }
