@@ -1,3 +1,5 @@
+#include <iostream>
+
 #include "SharedEditor.h"
 
 SharedEditor::SharedEditor(NetworkServer& ns) : _server(const_cast<NetworkServer&> (ns)){
@@ -23,10 +25,6 @@ void SharedEditor::setIdSharedEditor(int id) {
     this->_siteId = id;
 }
 
-void SharedEditor::receiveMessage(Message) {
-    //TODO: do stuffs
-}
-
 void SharedEditor::initCRDT() {
     this->_symbols.push_front(Symbol(' ',this->getIdScharedEditor(),-1,{0}));
     this->_symbols.push_back(Symbol(' ',this->getIdScharedEditor(),-1,{1}));
@@ -37,7 +35,8 @@ void SharedEditor::localInsert(int index,char value) {
     //Symbol tempSymbol = Symbol(value,this->getIdScharedEditor(),this->getCounterSharedEditor(),this->calculateNewSRDT(index,this->_symbols));
     int i = 0;
     std::vector<int> newCRDT;
-    for(auto it = this->_symbols.begin();it != this->_symbols.end();++it) {
+    Symbol newSymbol = Symbol(value, this->getIdScharedEditor(), this->getCounterSharedEditor(), newCRDT);
+    for (auto it = this->_symbols.begin(); it != this->_symbols.end(); ++it) {
         if (i == (index - 1)) {
             int j = 0;
             for (auto it2 = this->_symbols.begin()->getCRDTSymbol().begin();
@@ -45,28 +44,43 @@ void SharedEditor::localInsert(int index,char value) {
                 newCRDT[j] = it2[j];
                 j++;
             }
-            it->getCRDTSymbol()[j]++;
+            if(it->getCRDTSymbol().size() >= j) {
+                if (it->getCRDTSymbol()[j] != 9)
+                    it->getCRDTSymbol()[j]++;
+                else
+                    it->getCRDTSymbol().push_back(0);
+            }
+            else
+                it->getCRDTSymbol().push_back(1);
         }
         if (i == index) {
-            this->_symbols.insert(it, Symbol(value, this->getIdScharedEditor(), this->getCounterSharedEditor(), newCRDT));
+            newSymbol.positionCRDT = newCRDT;
+            this->_symbols.insert(it,newSymbol);
             break;
         }
     }
+    this->_server.getMessageVector().push_back(Message(newSymbol,true));
+}
 
-    void SharedEditor::localErase(int index) {
-        int i = 0;
-        for(auto it = this->_symbols.begin();it != this->_symbols.end();++it) {
-            if (i == index) {
-                this->_symbols.erase(it);
-                break;
-            }
+void SharedEditor::localErase(int index) {
+    int i = 0;
+    for(auto it = this->_symbols.begin();it != this->_symbols.end();++it) {
+        if (i == index) {
+            this->_symbols.erase(it);
+            break;
         }
-        this->_server.getMessageVector().insert(Message())
-        //TODO: implement Message class and methods
     }
+    this->_server.getMessageVector().push_back(Message(Symbol(' ',-1,-1,std::vector<int> {}),false));
+}
 
+std::string SharedEditor::to_string() {
+    std::string output;
+    for(auto it = this->_symbols.begin();it != this->_symbols.end();++it) {
+        output.append(&it->symbol);
+    }
+    std::cout<<output;
+}
 
-
-
+void SharedEditor::process(const Message& m) {
     //TODO: continue here
 }

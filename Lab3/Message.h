@@ -1,15 +1,17 @@
 #ifndef LAB3_MESSAGE_H
 #define LAB3_MESSAGE_H
 
-#pragma once
+#include "Symbol.h"
 
 class Message {
 private:
     int sourceSharedEditor;
 public:
-    Message(bool);
+    Message(Symbol,bool);
     ~Message();
-    bool isInsertMessage;
+
+    bool isInsert;
+    Symbol symbolOrNULL;
 
     int getSourceIdMessage();
 };

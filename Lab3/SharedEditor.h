@@ -25,12 +25,12 @@ public:
     void incrementCounterSharedEditor();
     void setIdSharedEditor(int);
 
-    void receiveMessage(Message);
-
     void initCRDT();
 
     void localInsert(int,char);
     void localErase(int);
+    std::string to_string();
+    void process(const Message&);
     };
 
 

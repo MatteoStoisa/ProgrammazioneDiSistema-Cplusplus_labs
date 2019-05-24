@@ -1,8 +1,9 @@
 #include "Message.h"
 
-Message::Message(bool isInsert) {
-    isInsertMessage = isInsert;
+Message::Message(Symbol symbolInserted,bool insert) : symbolOrNULL(const_cast<Symbol&> (symbolInserted)) {
+    isInsert = insert;
 }
+
 Message::~Message() = default;
 
 int Message::getSourceIdMessage() {

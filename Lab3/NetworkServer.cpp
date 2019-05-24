@@ -39,10 +39,10 @@ void NetworkServer::send(const Message& m) {
 }
 
 void NetworkServer::dispatchMessages() {
-    for(auto itM = std::vector<Message>::iterator(); itM != this->messageVector.end(); ++itM) { //TODO: check it works with vector or change in stack
+    for(auto itM = std::vector<Message>::iterator(); itM != this->messageVector.end(); ++itM) {
         for(auto itS = std::map<int,std::shared_ptr<SharedEditor>>::iterator(); itS != this->sharedEditorPointers.end(); ++itS) {
             if(itM->getSourceIdMessage() != itS->first) {
-                itS->second->receiveMessage(*itM);
+                itS->second->process(*itM);
                 this->messageVector.erase(itM);
             }
         }
