@@ -2,6 +2,7 @@
 #define LAB3_SHAREDEDITOR_H
 
 #include <memory>
+#include <list>
 
 #include "Symbol.h"
 #include "Message.h"
@@ -13,7 +14,7 @@ class SharedEditor {
 private:
     NetworkServer& _server;
     int _siteId;
-    std::vector<Symbol> _symbols;
+    std::list<Symbol> _symbols;
     int _counter;
 public:
     SharedEditor(NetworkServer&);
@@ -26,11 +27,10 @@ public:
 
     void receiveMessage(Message);
 
-    void initSRDT();
+    void initCRDT();
 
     void localInsert(int,char);
-
-    std::vector<int> calculateNewSRDT(int, std::vector<Symbol>);
+    void localErase(int);
     };
 
 

@@ -7,6 +7,10 @@ class Message {
 private:
     int sourceSharedEditor;
 public:
+    Message(bool);
+    ~Message();
+    bool isInsertMessage;
+
     int getSourceIdMessage();
 };
 

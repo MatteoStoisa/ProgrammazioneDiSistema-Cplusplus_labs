@@ -20,6 +20,8 @@ public:
     NetworkServer();
     ~NetworkServer();
 
+    std::vector<Message> getMessageVector();
+
     int generateIdSharedNetwork();
     void incrementSharedEditor();
 

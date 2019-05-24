@@ -8,3 +8,7 @@ Symbol::Symbol(char character,int sourceId,int sourceCounter,std::vector<int> po
 }
 
 Symbol::~Symbol() = default;
+
+std::vector<int> Symbol::getCRDTSymbol() {
+    return this->positionCRDT;
+}
