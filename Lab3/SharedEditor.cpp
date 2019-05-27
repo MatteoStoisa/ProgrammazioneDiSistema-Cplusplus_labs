@@ -82,5 +82,27 @@ std::string SharedEditor::to_string() {
 }
 
 void SharedEditor::process(const Message& m) {
-    //TODO: continue here
+    if(m.isInsert) {
+        for(auto it = this->_symbols.begin(); it != this->_symbols.end(); ++it) {
+            try {
+                if(it->positionCRDT == m.symbolCRDT) {
+                    throw 0 ;
+                }
+                if(it->positionCRDT > m.symbolCRDT) {
+                    --it;
+                    this->_symbols.insert(it,m.symbol);
+                }
+            }
+            catch(int a) {
+                std::cout<<"collision";
+                exit(-1);
+            }
+        }
+    }
+    else {
+        for(auto it = this->_symbols.begin(); it != this->_symbols.end(); ++it) {
+            if(it->positionCRDT == m.symbolCRDT)
+                this->_symbols.erase(it);
+        }
+    }
 }

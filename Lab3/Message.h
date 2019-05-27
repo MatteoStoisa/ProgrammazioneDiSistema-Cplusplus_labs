@@ -10,8 +10,9 @@ public:
     Message(Symbol,bool);
     ~Message();
 
+    Symbol symbol;
     bool isInsert;
-    Symbol symbolOrNULL;
+    std::vector<int> symbolCRDT;
 
     int getSourceIdMessage();
 };
