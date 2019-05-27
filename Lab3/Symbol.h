@@ -13,7 +13,6 @@ public:
     char symbol;
     int symbolSourceId;
     int symbolSourceCounter;
-    int symbolActualIndex;
     std::vector<int> positionCRDT;
 
     std::vector<int> getCRDTSymbol();

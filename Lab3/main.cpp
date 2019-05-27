@@ -21,5 +21,13 @@ int main() {
     std::cout<<"ed1: "<<ed1.to_string()<<std::endl;
     std::cout<<"ed2: "<<ed2.to_string()<<std::endl;
 
-    return 0;
+/*  NetworkServer network;
+  SharedEditor ed1(network);
+  SharedEditor ed2(network);
+  ed1.localInsert(0, 'c');
+  network.dispatchMessages();
+  std::cout<<"ed1: "<<ed1.to_string()<<std::endl;*/
+
+
+  return 0;
 }

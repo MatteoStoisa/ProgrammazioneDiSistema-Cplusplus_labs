@@ -5,6 +5,7 @@
 SharedEditor::SharedEditor(NetworkServer& ns) : _server(const_cast<NetworkServer&> (ns)){
     this->setIdSharedEditor(this->_server.connect(this));
     this->_counter = 0;
+    this->initCRDT();
 }
 
 SharedEditor::~SharedEditor() = default;
@@ -36,28 +37,30 @@ void SharedEditor::localInsert(int index,char value) {
     int i = 0;
     std::vector<int> newCRDT;
     Symbol newSymbol = Symbol(value, this->getIdScharedEditor(), this->getCounterSharedEditor(), newCRDT);
+    if(index == 0) {
+      index++;
+    }
+    else {
+      if (index == this->_symbols.size())
+        index--;
+    }
     for (auto it = this->_symbols.begin(); it != this->_symbols.end(); ++it) {
         if (i == (index - 1)) {
             int j = 0;
-            for (auto it2 = this->_symbols.begin()->getCRDTSymbol().begin();
-                 it2 != this->_symbols.end()->getCRDTSymbol().end(); ++it2) {
-                newCRDT[j] = it2[j];
+            for (auto it2 = it->positionCRDT.begin();it2 != it->positionCRDT.end();++it2) {
+                newCRDT.push_back(*it2);
                 j++;
             }
-            if(it->getCRDTSymbol().size() >= j) {
-                if (it->getCRDTSymbol()[j] != 9)
-                    it->getCRDTSymbol()[j]++;
-                else
-                    it->getCRDTSymbol().push_back(0);
-            }
+            j--;
+            if((it++->positionCRDT[j] - it->getCRDTSymbol()[j]) >= 1)
+                newCRDT[j]++;
             else
-                it->getCRDTSymbol().push_back(1);
-        }
-        if (i == index) {
+                newCRDT.push_back(1);
             newSymbol.positionCRDT = newCRDT;
-            this->_symbols.insert(it,newSymbol);
+            this->_symbols.insert(it++,newSymbol);
             break;
         }
+        i++;
     }
     this->_server.getMessageVector().push_back(Message(newSymbol,true));
 }
