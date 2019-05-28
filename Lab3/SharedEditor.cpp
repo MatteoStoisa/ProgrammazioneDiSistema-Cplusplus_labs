@@ -38,29 +38,59 @@ void SharedEditor::localInsert(int index,char value) {
     std::vector<int> newCRDT;
     Symbol newSymbol = Symbol(value, this->getIdScharedEditor(), this->getCounterSharedEditor(), newCRDT);
     if(index == 0) {
-      index++;
+        //TODO: need minimum number after 0
+        int j = 0;
+        auto it = this->_symbols.begin();
+        it++;
+        for (auto it2 = it->positionCRDT.begin();it2 != it->positionCRDT.end();++it2) {
+            newCRDT.push_back(*it2);
+            j++;
+        }
+        j--;
+        newCRDT[j]--;
+        newSymbol.positionCRDT = newCRDT;
+        this->_symbols.insert(it,newSymbol);
+        //TODO: check
     }
     else {
-      if (index == this->_symbols.size())
-        index--;
-    }
-    for (auto it = this->_symbols.begin(); it != this->_symbols.end(); ++it) {
-        if (i == (index - 1)) {
-            int j = 0;
-            for (auto it2 = it->positionCRDT.begin();it2 != it->positionCRDT.end();++it2) {
-                newCRDT.push_back(*it2);
-                j++;
-            }
-            j--;
-            if((it++->positionCRDT[j] - it->getCRDTSymbol()[j]) >= 1)
-                newCRDT[j]++;
-            else
-                newCRDT.push_back(1);
-            newSymbol.positionCRDT = newCRDT;
-            this->_symbols.insert(it++,newSymbol);
-            break;
-        }
-        i++;
+      if (index == (this->_symbols.size() - 2)) {
+          //TODO: need maximum number before 1
+          int j = 0;
+          auto it = this->_symbols.end();
+          it--;
+          for (auto it2 = it->positionCRDT.begin();it2 != it->positionCRDT.end();++it2) {
+              newCRDT.push_back(*it2);
+              j++;
+          }
+          j--;
+          if(newCRDT[j] != 9)
+            newCRDT[j]--;
+          else
+              newCRDT.push_back(1);
+          newSymbol.positionCRDT = newCRDT;
+          this->_symbols.insert(it,newSymbol);
+          //TODO: check
+      }
+      else {
+          for (auto it = this->_symbols.begin(); it != this->_symbols.end(); ++it) {
+              if (i == (index - 1)) {
+                  int j = 0;
+                  for (auto it2 = it->positionCRDT.begin();it2 != it->positionCRDT.end();++it2) {
+                      newCRDT.push_back(*it2);
+                      j++;
+                  }
+                  j--;
+                  if((it++->positionCRDT[j] - it->getCRDTSymbol()[j]) >= 1) //TODO: check it++-> (?)
+                      newCRDT[j]++;
+                  else
+                      newCRDT.push_back(1);
+                  newSymbol.positionCRDT = newCRDT;
+                  this->_symbols.insert(it,newSymbol);
+                  break;
+              }
+              i++;
+          }
+      }
     }
     this->_server.getMessageVector().push_back(Message(newSymbol,true));
 }
