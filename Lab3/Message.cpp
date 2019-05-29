@@ -1,12 +1,9 @@
 #include "Message.h"
 
-Message::Message(Symbol symbolInserted,bool insert) : symbol(const_cast<Symbol&> (symbolInserted)) {
+Message::Message(Symbol symbolInserted, int id, bool insert) : symbol(const_cast<Symbol&> (symbolInserted)) {
     isInsert = insert;
     symbol = symbolInserted;
+    sourceSharedEditor = id;
 }
 
 Message::~Message() = default;
-
-int Message::getSourceIdMessage() {
-    return this->sourceSharedEditor;
-}

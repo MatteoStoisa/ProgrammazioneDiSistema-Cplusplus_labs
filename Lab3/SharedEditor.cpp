@@ -32,67 +32,60 @@ void SharedEditor::initCRDT() {
 }
 
 void SharedEditor::localInsert(int index,char value) {
-    this->incrementCounterSharedEditor();
-    //Symbol tempSymbol = Symbol(value,this->getIdScharedEditor(),this->getCounterSharedEditor(),this->calculateNewSRDT(index,this->_symbols));
-    int i = 0;
-    std::vector<int> newCRDT;
-    Symbol newSymbol = Symbol(value, this->getIdScharedEditor(), this->getCounterSharedEditor(), newCRDT);
-    if(index == 0) {
-        //TODO: need minimum number after 0
-        int j = 0;
-        auto it = this->_symbols.begin();
-        it++;
-        for (auto it2 = it->positionCRDT.begin();it2 != it->positionCRDT.end();++it2) {
-            newCRDT.push_back(*it2);
-            j++;
+  this->incrementCounterSharedEditor();
+  std::vector<int> newCRDT;
+  Symbol newSymbol = Symbol(value, this->getIdScharedEditor(), this->getCounterSharedEditor(), newCRDT);
+  int i = 0; //counter on iterator it
+
+  for (auto it = this->_symbols.begin(); it != this->_symbols.end(); ++it) { //iterator on symbol list
+    if (i == index) { //when arrived before index symbol
+      int j = 0;
+      for (auto it2 = it->positionCRDT.begin();
+           it2 != it->positionCRDT.end(); ++it2) { //iterator: copy of previous CRDT
+        newSymbol.positionCRDT.push_back(*it2);
+        j++;
+      }
+      j--;
+      auto itPre = it; //pre index
+      it++; //post index
+      //TODO: switch case on (it->positionCRDT.size() - itPre->positionCRDT.size()) >=< 0
+
+      int diff = (it->positionCRDT.size() - itPre->positionCRDT.size());
+      // >0 add as many zeros
+      // ==0 check: (postCRDT[j] - preCRTD[j])>1 add 1, or push_back(1)
+      // <0 preCRDT[j] add1
+
+      if(diff > 0 ) {
+        for(int k = 0; k < diff; k++) {
+          newCRDT.push_back(0);
         }
-        j--;
-        newCRDT[j]--;
-        newSymbol.positionCRDT = newCRDT;
-        this->_symbols.insert(it,newSymbol);
-        //TODO: check
-    }
-    else {
-      if (index == (this->_symbols.size() - 2)) {
-          //TODO: need maximum number before 1
-          int j = 0;
-          auto it = this->_symbols.end();
-          it--;
-          for (auto it2 = it->positionCRDT.begin();it2 != it->positionCRDT.end();++it2) {
-              newCRDT.push_back(*it2);
-              j++;
-          }
-          j--;
-          if(newCRDT[j] != 9)
-            newCRDT[j]--;
-          else
-              newCRDT.push_back(1);
-          newSymbol.positionCRDT = newCRDT;
-          this->_symbols.insert(it,newSymbol);
-          //TODO: check
+        newCRDT.push_back(1);
       }
       else {
-          for (auto it = this->_symbols.begin(); it != this->_symbols.end(); ++it) {
-              if (i == (index - 1)) {
-                  int j = 0;
-                  for (auto it2 = it->positionCRDT.begin();it2 != it->positionCRDT.end();++it2) {
-                      newCRDT.push_back(*it2);
-                      j++;
-                  }
-                  j--;
-                  if((it++->positionCRDT[j] - it->getCRDTSymbol()[j]) >= 1) //TODO: check it++-> (?)
-                      newCRDT[j]++;
-                  else
-                      newCRDT.push_back(1);
-                  newSymbol.positionCRDT = newCRDT;
-                  this->_symbols.insert(it,newSymbol);
-                  break;
-              }
-              i++;
-          }
+        if() //TODO: copntinue here
       }
+
+
+
+
+      if(it->positionCRDT.size() == itPre->positionCRDT.size()) {
+        if ((it->positionCRDT[j] - itPre->positionCRDT[j]) > 1) {
+          newSymbol.positionCRDT[j]++;
+        } else {
+          newSymbol.positionCRDT.push_back(1);
+        }
+      }
+      else {
+        if(it->positionCRDT.size() > itPre->positionCRDT.size())
+
+        newSymbol.positionCRDT.push_back(1);
+      }
+      this->_symbols.insert(it, newSymbol);
     }
-    this->_server.getMessageVector().push_back(Message(newSymbol,true));
+    i++;
+  }
+  Message tempM = Message(newSymbol, this->getIdScharedEditor(), true);
+  this->_server.messageVector.push_back(tempM);
 }
 
 void SharedEditor::localErase(int index) {
@@ -103,7 +96,7 @@ void SharedEditor::localErase(int index) {
             break;
         }
     }
-    this->_server.getMessageVector().push_back(Message(Symbol(' ',-1,-1,std::vector<int> {}),false));
+    this->_server.messageVector.push_back(Message(Symbol(' ',-1,-1,std::vector<int> {}),this->getIdScharedEditor(),false));
 }
 
 std::string SharedEditor::to_string() {
@@ -118,10 +111,10 @@ void SharedEditor::process(const Message& m) {
     if(m.isInsert) {
         for(auto it = this->_symbols.begin(); it != this->_symbols.end(); ++it) {
             try {
-                if(it->positionCRDT == m.symbolCRDT) {
+                if(it->positionCRDT == m.symbol.positionCRDT) {
                     throw 0 ;
                 }
-                if(it->positionCRDT > m.symbolCRDT) {
+                if(it->positionCRDT > m.symbol.positionCRDT) {
                     --it;
                     this->_symbols.insert(it,m.symbol);
                 }
@@ -134,7 +127,7 @@ void SharedEditor::process(const Message& m) {
     }
     else {
         for(auto it = this->_symbols.begin(); it != this->_symbols.end(); ++it) {
-            if(it->positionCRDT == m.symbolCRDT)
+            if(it->positionCRDT == m.symbol.positionCRDT)
                 this->_symbols.erase(it);
         }
     }

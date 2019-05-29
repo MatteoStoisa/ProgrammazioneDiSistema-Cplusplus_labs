@@ -9,10 +9,6 @@ NetworkServer::NetworkServer() {
 
 NetworkServer::~NetworkServer() = default;
 
-std::vector<Message> NetworkServer::getMessageVector() {
-    return this->messageVector;
-}
-
 int NetworkServer::generateIdSharedNetwork() {
     return this->idSharedEditorGenerator;
 }
@@ -38,10 +34,10 @@ void NetworkServer::send(const Message& m) {
 }
 
 void NetworkServer::dispatchMessages() {
-    for(auto itM = std::vector<Message>::iterator(); itM != this->messageVector.end(); ++itM) {
-        for(auto itS = std::map<int,std::shared_ptr<SharedEditor>>::iterator(); itS != this->sharedEditorPointers.end(); ++itS) {
-            if(itM->getSourceIdMessage() != itS->first) {
-                itS->second->process(*itM);
+    for(auto itM = this->messageVector.begin(); itM != this->messageVector.end(); ++itM) {
+        for(auto itS = this->sharedEditorPointers.begin(); itS != this->sharedEditorPointers.end(); ++itS) {
+            if(itM->sourceSharedEditor != itS->first) {
+                itS->second->process(*itM); //TODO: crash here
                 this->messageVector.erase(itM);
             }
         }

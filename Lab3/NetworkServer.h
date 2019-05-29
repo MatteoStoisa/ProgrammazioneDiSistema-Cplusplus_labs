@@ -13,14 +13,13 @@ class SharedEditor;
 class NetworkServer {
 private:
     std::map<int,std::shared_ptr<SharedEditor>> sharedEditorPointers;
-    std::vector<Message> messageVector;
 
     int idSharedEditorGenerator;
 public:
     NetworkServer();
     ~NetworkServer();
 
-    std::vector<Message> getMessageVector();
+    std::vector<Message> messageVector;
 
     int generateIdSharedNetwork();
     void incrementSharedEditor();

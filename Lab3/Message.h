@@ -5,16 +5,13 @@
 
 class Message {
 private:
-    int sourceSharedEditor;
 public:
-    Message(Symbol,bool);
+    Message(Symbol,int,bool);
     ~Message();
 
+    int sourceSharedEditor;
     Symbol symbol;
     bool isInsert;
-    std::vector<int> symbolCRDT;
-
-    int getSourceIdMessage();
 };
 
 
