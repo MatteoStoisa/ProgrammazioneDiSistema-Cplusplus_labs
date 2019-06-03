@@ -1,6 +1,6 @@
 #include "Job.h"
 
-int extern idGenerator_Job;
+int idGenerator_Job = 0;
 
 Job::Job() {
   this->id = idGenerator_Job++;
