@@ -1,13 +1,10 @@
 #ifndef LAB4_JOBSCHEDULER_H
 #define LAB4_JOBSCHEDULER_H
 
-
 #include <queue>
 
 #include "Job.h"
 #include "Worker.h"
-
-#define simulator_time 500;
 
 class JobScheduler {
 private:
@@ -18,7 +15,9 @@ public:
     std::priority_queue<Job,std::vector<Job>,std::less<Job>> job_priorityQueue;
     std::queue<Job,std::vector<Job>> jobInAct_queue;
     std::vector<Job> jobTerminated_vector;
+
     std::vector<Worker> workerThread_vector;
+
 };
 
 

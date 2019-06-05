@@ -11,7 +11,7 @@ public:
     ~Worker();
 
     int id;
-
+    void beginWork();
 };
 
 #endif
