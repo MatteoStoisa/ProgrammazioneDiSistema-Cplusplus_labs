@@ -8,13 +8,13 @@ private:
 
 public:
     int id;
-    std::chrono::duration<int, std::milli> duration;
-    std::chrono::duration<int, std::milli> execution_time;
-    std::chrono::duration<int, std::milli> wait_time;
-    std::chrono::time_point<std::chrono::system_clock> completation_time;
-    std::chrono::time_point<std::chrono::system_clock> start_time;
+    long int duration;
+    long int execution_time;
+    long int wait_time;
+    long int completation_time;
+    long int start_time;
 
-    Job();
+    Job(long int,long int);
     ~Job();
 
 };

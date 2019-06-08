@@ -2,9 +2,12 @@
 #define LAB4_JOBSCHEDULER_H
 
 #include <queue>
+#include <thread>
+#include <iostream>
+#include <vector>
 
 #include "Job.h"
-#include "Worker.h"
+//#include "Worker.h"
 
 class JobScheduler {
 private:
@@ -16,7 +19,11 @@ public:
     std::queue<Job,std::vector<Job>> jobInAct_queue;
     std::vector<Job> jobTerminated_vector;
 
-    std::vector<Worker> workerThread_vector;
+    //std::vector<Worker> worker_vector;
+    std::vector<std::thread> thread_vector;
+
+    void submit(Job);
+    void start();
 
 };
 

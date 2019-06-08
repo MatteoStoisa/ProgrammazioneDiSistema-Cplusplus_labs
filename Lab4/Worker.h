@@ -3,6 +3,7 @@
 
 #include <thread>
 #include <iostream>
+#include <vector>
 
 class Worker {
 private:
@@ -11,6 +12,7 @@ public:
     ~Worker();
 
     int id;
+
     void beginWork();
 };
 

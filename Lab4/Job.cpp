@@ -2,12 +2,12 @@
 
 int idGenerator_Job = 0;
 
-Job::Job() {
+Job::Job(long int start,long int dur) {
   this->id = idGenerator_Job++;
-  //this->duration =
-  this->execution_time = std::chrono::milliseconds(0);
-  this->wait_time = std::chrono::milliseconds(0);
-  this->start_time = std::chrono::system_clock::now();
+  this->duration = dur;
+  this->execution_time = 0;
+  this->wait_time = 0;
+  this->start_time = start;
 }
 
 Job::~Job() = default;
