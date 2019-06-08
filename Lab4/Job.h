@@ -11,7 +11,7 @@ public:
     long int duration;
     long int execution_time;
     long int wait_time;
-    long int completation_time;
+    long int completation_time; //TODO: scope for this variable??
     long int start_time;
 
     Job(long int,long int);

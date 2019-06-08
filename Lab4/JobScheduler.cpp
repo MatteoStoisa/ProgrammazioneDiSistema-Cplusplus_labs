@@ -12,6 +12,7 @@ void effe() {
   output_mutex.lock();
   std::cout<<"Worker thread started at PID "<<std::this_thread::get_id()<<"\n";
   output_mutex.unlock();
+  //TODO: main thread function
   std::this_thread::sleep_for(std::chrono::seconds(10));
 }
 
@@ -20,6 +21,7 @@ JobScheduler::JobScheduler() {
 
 JobScheduler::~JobScheduler() {
   for(auto it = this->thread_vector.begin(); it != this->thread_vector.end(); ++it) {
+    //TODO: verify thread is not working on a Job
     it->join();
   }
 }
