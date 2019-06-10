@@ -11,12 +11,43 @@ int threads = 8;
 
 std::mutex extern output_mutex;
 
-void effe() {
+void effe(JobScheduler js) {
   output_mutex.lock();
   std::cout<<"Worker thread started at PID "<<std::this_thread::get_id()<<"\n";
   output_mutex.unlock();
-  //TODO: main thread function
-  std::this_thread::sleep_for(std::chrono::seconds(10));
+  while(1) {
+    if(js.job_priorityQueue.empty() && js.jobInAct_queue.empty()) { //termination condition
+      break;
+    }
+    else { //take job from queue with mutex
+      if(!js.jobInAct_queue.empty()) {
+        js.jobInAct_queue_mutex.lock();
+        //Job jobWorking = this->jobInAct_queue.front();
+        Job jobWorking = js.jobInAct_queue.top();
+        //this->jobInAct_queue.pop(); //TODO: pop doesnt work (?)
+        js.jobInAct_queue_mutex.unlock();
+        if(jobWorking.duration > simulator_time) { //work
+          output_mutex.lock();
+          std::cout<<"job "<<jobWorking.id<<"working: "<<jobWorking.duration<<" remaning";
+          std::this_thread::__sleep_for(std::chrono::seconds(simulator_time/1000),std::chrono::nanoseconds(0));
+          jobWorking.duration -= simulator_time;
+          js.jobInAct_queue_mutex.lock();
+          js.jobInAct_queue.push(jobWorking);
+          js.jobInAct_queue_mutex.unlock();
+        }
+        else {
+          std::this_thread::__sleep_for(std::chrono::seconds(jobWorking.duration/1000),std::chrono::nanoseconds(0));
+          jobWorking.duration = 0;
+          js.jobTerminated_vector.push_back(jobWorking);
+        }
+      }
+      else { //no job ready to execute, wait for start_time
+        std::this_thread::__sleep_for(std::chrono::seconds(js.job_priorityQueue.top().start_time/1000),std::chrono::nanoseconds(0));
+        //TODO: continue here
+      }
+    }
+  }
+
 }
 
 JobScheduler::JobScheduler() {
@@ -36,35 +67,7 @@ void JobScheduler::submit (Job j) {
 
 void JobScheduler::start() {
   for(int i = 0;i < threads; i++) {
-    this->thread_vector.push_back(std::thread(effe));
+    this->thread_vector.push_back(std::thread(effe,this)); //TODO: how to call??
   }
-  while(1) {
-    if(this->job_priorityQueue.empty() && this->jobInAct_queue.empty()) { //termination condition
-      break;
-    }
-    else { //take job from queue with mutex
-      if(!this->jobInAct_queue.empty()) {
-        jobInAct_queue_mutex.lock();
-        Job jobWorking = this->jobInAct_queue.front();
-        //this->jobInAct_queue.pop(); //TODO: pop doesnt work (?)
-        jobInAct_queue_mutex.unlock();
-        if(jobWorking.duration > simulator_time) { //work
-          std::this_thread::__sleep_for(std::chrono::seconds(simulator_time/1000),std::chrono::nanoseconds(0));
-          jobWorking.duration -= simulator_time;
-          jobInAct_queue_mutex.lock();
-          jobInAct_queue.push(jobWorking);
-          jobInAct_queue_mutex.unlock();
-        }
-        else {
-          std::this_thread::__sleep_for(std::chrono::seconds(jobWorking.duration/1000),std::chrono::nanoseconds(0));
-          jobWorking.duration = 0;
-          jobTerminated_vector.push_back(jobWorking);
-        }
-      }
-      else { //no job ready to execute, wait for start_time
-        std::this_thread::__sleep_for(std::chrono::seconds(this->job_priorityQueue.top().start_time/1000),std::chrono::nanoseconds(0));
-        //TODO: continue here
-      }
-    }
-  }
+
 }

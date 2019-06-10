@@ -19,7 +19,7 @@ public:
     std::chrono::system_clock startTime;
 
     std::priority_queue<Job,std::vector<Job>,std::less<Job>> job_priorityQueue;
-    std::queue<Job,std::vector<Job>> jobInAct_queue;
+    std::priority_queue<Job,std::vector<Job>,std::less<Job>> jobInAct_queue; //unneeded priority
     std::vector<Job> jobTerminated_vector;
 
     //std::vector<Worker> worker_vector;

@@ -14,7 +14,7 @@ public:
     long int completation_time; //TODO: scope for this variable??
     long int start_time;
 
-    Job(long int,long int);
+    Job(int,long int,long int);
     ~Job();
 
 };
