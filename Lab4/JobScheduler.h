@@ -23,6 +23,8 @@ public:
     std::vector<Job> jobTerminated_vector;
 
     //std::vector<Worker> worker_vector;
+
+    //std::vector<Worker> worker_vector;
     std::vector<std::thread> thread_vector;
 
     std::condition_variable job_priorityQueue_conditionVariable;
