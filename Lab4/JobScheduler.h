@@ -34,6 +34,7 @@ public:
     void submit(Job);
     void start();
 
+    void effe();
 };
 
 
