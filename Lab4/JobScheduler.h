@@ -17,23 +17,22 @@ public:
     ~JobScheduler();
 
     std::chrono::system_clock startTime;
+    int anyWorking = 0; //same mutex as jobInAct
 
-    std::priority_queue<Job,std::vector<Job>,std::less<Job>> job_priorityQueue;
+    std::vector<Job> job_vector;
     std::priority_queue<Job,std::vector<Job>,std::less<Job>> jobInAct_queue; //unneeded priority
     std::vector<Job> jobTerminated_vector;
 
-    //std::vector<Worker> worker_vector;
-
-    //std::vector<Worker> worker_vector;
     std::vector<std::thread> thread_vector;
 
     std::condition_variable job_priorityQueue_conditionVariable;
     std::mutex jobInAct_queue_mutex;
-    std::mutex job_priorityQueue_mutex;
+    std::mutex job_vector_mutex;
 
     void submit(Job);
     void start();
 
+    void waitToSubmit(Job);
     void effe();
 };
 

@@ -5,7 +5,7 @@
 #include <iostream>
 #include <vector>
 
-//TODO: needed class??
+//TODO: needed class?? seems not
 class Worker {
 private:
 public:

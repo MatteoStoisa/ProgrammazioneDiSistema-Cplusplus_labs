@@ -1,9 +1,6 @@
 #include "Job.h"
 
-int idGenerator_Job = 0;
-
 Job::Job(int i,long int start,long int dur) {
-  //this->id = idGenerator_Job++;
   this->id = i;
   this->duration = dur;
   this->execution_time = 0;
@@ -15,4 +12,16 @@ Job::~Job() = default;
 
 bool operator<(const Job& joba, const Job& jobb) {
     return (joba.start_time < jobb.start_time);
+}
+
+bool Job::operator==(Job j) {
+  if(this->start_time != j.start_time)
+    return false;
+  if(this->duration != j.duration)
+    return false;
+  if(this->wait_time != j.wait_time)
+    return false;
+  if(this->completation_time != j.completation_time)
+    return false;
+  return true;
 }

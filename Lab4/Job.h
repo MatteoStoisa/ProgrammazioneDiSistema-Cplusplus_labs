@@ -17,6 +17,8 @@ public:
     Job(int,long int,long int);
     ~Job();
 
+    bool operator==(Job);
+
 };
 
 bool operator<(const Job&, const Job&);
