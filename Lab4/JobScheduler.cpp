@@ -6,7 +6,7 @@
 
 #include "JobScheduler.h"
 
-int threads = 8;
+int threads = 4;
 int simulator_time = 300;
 
 std::mutex extern output_mutex;
@@ -25,7 +25,8 @@ JobScheduler::~JobScheduler() {
 }
 
 void JobScheduler::submit (Job j) {
-  this->job_priorityQueue.push(j);
+  //this->job_priorityQueue.push(j); //TODO: implemente time between submit and inAct
+    this->jobInAct_queue.push(j);
 }
 
 void JobScheduler::start() {
@@ -47,11 +48,12 @@ void JobScheduler::effe() {
                 this->jobInAct_queue_mutex.lock();
                 //Job jobWorking = this->jobInAct_queue.front();
                 Job jobWorking = this->jobInAct_queue.top();
-                //this->jobInAct_queue.pop(); //TODO: pop doesnt work (?)
+                this->jobInAct_queue.pop(); //TODO: pop doesnt work (?)
                 this->jobInAct_queue_mutex.unlock();
                 if(jobWorking.duration > simulator_time) { //work
                     output_mutex.lock();
-                    std::cout<<"job "<<jobWorking.id<<"working: "<<jobWorking.duration<<" remaning";
+                    std::cout<<"thread "<<std::this_thread::get_id()<<" on job "<<jobWorking.id<<": "<<jobWorking.duration<<" remaning (-"<<simulator_time<<")\n";
+                    output_mutex.unlock();
                     std::this_thread::__sleep_for(std::chrono::seconds(simulator_time/1000),std::chrono::nanoseconds(0));
                     jobWorking.duration -= simulator_time;
                     this->jobInAct_queue_mutex.lock();
