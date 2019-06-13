@@ -24,6 +24,12 @@ JobScheduler::~JobScheduler() {
   }
 }
 
+void JobScheduler::start() {
+    for(int i = 0;i < threads; i++) {
+        this->thread_vector.push_back(std::thread(&JobScheduler::mainWorkingThreadFunction_aka_EFFE,this));
+    }
+}
+
 void JobScheduler::submit (Job j) {
   if(j.start_time == 0) {
     jobInAct_queue_mutex.lock();
@@ -42,13 +48,25 @@ void JobScheduler::submit (Job j) {
   }
 }
 
-void JobScheduler::start() {
-    for(int i = 0;i < threads; i++) {
-        this->thread_vector.push_back(std::thread(&JobScheduler::effe,this));
+void JobScheduler::waitToSubmit(Job j) { //TODO: doesnt work thread+detach?
+    std::this_thread::__sleep_for(std::chrono::seconds(j.start_time/1000),std::chrono::nanoseconds(0));
+    this->job_vector_mutex.lock();
+    for(auto it = this->job_vector.begin(); it != this->job_vector.end(); ++it) {
+        if(j == *it) {
+            this->job_vector.erase(it);
+            break;
+        }
     }
+    this->job_vector_mutex.unlock();
+    this->jobInAct_queue_mutex.lock();
+    this->jobInAct_queue.push(j);
+    this->jobInAct_queue_mutex.unlock();
+    output_mutex.lock();
+    std::cout<<"Job "<<j.id<<" ready after "<<j.start_time<<" ms"<<std::endl;
+    output_mutex.unlock();
 }
 
-void JobScheduler::effe() {
+void JobScheduler::mainWorkingThreadFunction_aka_EFFE() {
   output_mutex.lock();
   std::cout<<"Thread "<<std::this_thread::get_id()<<" started"<<std::endl;
   output_mutex.unlock();
@@ -89,30 +107,12 @@ void JobScheduler::effe() {
           this->jobInAct_queue_mutex.unlock();
         }
       }
-      else { //no job ready to execute, wait for start_time
+      else { //no job ready to execute, wait for start_time //TODO: implement condition_variable to sleep and being awake
         output_mutex.lock();
-        std::cout<<"Thread "<<std::this_thread::get_id()<<" on wait"<<std::endl;
+        std::cout<<"Thread "<<std::this_thread::get_id()<<" on wait"<<std::endl; //TODO: stalls here
         output_mutex.unlock();
         std::this_thread::__sleep_for(std::chrono::seconds(simulator_time),std::chrono::nanoseconds(0));
       }
     }
   }
-}
-
-void JobScheduler::waitToSubmit(Job j) { //TODO: doesnt work thread+detach?
-  std::this_thread::__sleep_for(std::chrono::seconds(j.start_time/1000),std::chrono::nanoseconds(0));
-  this->job_vector_mutex.lock();
-  for(auto it = this->job_vector.begin(); it != this->job_vector.end(); ++it) {
-    if(j == *it) {
-      this->job_vector.erase(it);
-      break;
-    }
-  }
-  this->job_vector_mutex.unlock();
-  this->jobInAct_queue_mutex.lock();
-  this->jobInAct_queue.push(j);
-  this->jobInAct_queue_mutex.unlock();
-  output_mutex.lock();
-  std::cout<<"Job "<<j.id<<" ready after "<<j.start_time<<" ms"<<std::endl;
-  output_mutex.unlock();
 }
