@@ -10,10 +10,11 @@ public:
     int id;
     long int duration;
     long int execution_time;
-    long int wait_time;
+    std::chrono::duration<double> wait_time;
     long int completation_time; //TODO: scope for this variable??
     long int start_time;
-    std::chrono::time_point<std::chrono::system_clock> globalStartTime;
+
+    std::chrono::time_point<std::chrono::system_clock> lastUpdated;
 
     Job(int,long int,long int);
     ~Job();

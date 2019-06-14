@@ -4,14 +4,14 @@ Job::Job(int i,long int start,long int dur) {
   this->id = i;
   this->duration = dur;
   this->execution_time = 0;
-  this->wait_time = 0;
+  this->wait_time = std::chrono::duration<double>(0);
   this->start_time = start;
 }
 
 Job::~Job() = default;
 
 bool operator<(const Job& joba, const Job& jobb) {
-    return (joba.start_time < jobb.start_time);
+    return (joba.lastUpdated < jobb.lastUpdated); //TODO: FIFO order of jobInAct_queue (?)
 }
 
 bool Job::operator==(Job j) {

@@ -11,28 +11,20 @@
 #include <ctime>
 
 int threads = 4;
-int simulator_time = 200;
+int simulator_time = 2500;
 
 std::mutex output_mutex;
 std::mutex time_mutex;
 
-std::chrono::time_point<std::chrono::system_clock> startTime, checkTime;
-
-double getTime() {
-  time_mutex.lock();
-  checkTime = std::chrono::system_clock::now();
-  time_mutex.unlock();
-  std::chrono::duration<double> durationTime = checkTime - startTime;
-  return durationTime.count();
-}
+std::chrono::time_point<std::chrono::system_clock> mainTime;
 
 int main() {
-  startTime = std::chrono::system_clock::now();
-  std::cout<<"--- Lab4 ---\n<"<<getTime()<<std::showpoint<<"> Main "<<std::this_thread::get_id()<<", "<<threads<<" core, "<<simulator_time<<" ms"<<std::endl;
+  std::chrono::time_point<std::chrono::system_clock> mainTime = std::chrono::system_clock::now();
+  std::cout<<"--- Lab4 ---\n<0.0000> Main "<<std::this_thread::get_id()<<", "<<threads<<" core, "<<simulator_time<<" ms"<<std::endl;
 
 
   JobScheduler p{};
-  p.submit( Job ( 1 , 0 , 15000 )); // Job(int id, int start_time, int duration)
+  /*p.submit( Job ( 1 , 0 , 15000 )); // Job(int id, int start_time, int duration)
   p.submit( Job ( 2 , 0 , 6000 ));
   p.submit( Job ( 3 , 1000 , 9000 ));
   p.submit( Job ( 4 , 2000 , 12000 ));
@@ -40,9 +32,9 @@ int main() {
   p.submit( Job ( 6 , 3000 , 5000 ));
   p.submit( Job ( 7 , 4000 , 7000 ));
   p.submit( Job ( 8 , 4000 , 6000 ));
-  p.submit( Job ( 9 , 5000 , 9000 ));
+  p.submit( Job ( 9 , 5000 , 9000 ));*/
 
-    /*p.submit( Job ( 1 , 0 , 15000 )); // Job(int id, int start_time, int duration)
+    p.submit( Job ( 1 , 0 , 15000 )); // Job(int id, int start_time, int duration)
     p.submit( Job ( 2 , 56 , 6000 ));
     p.submit( Job ( 3 , 1000 , 9000 ));
     p.submit( Job ( 4 , 2000 , 12000 ));
@@ -77,18 +69,18 @@ int main() {
     p.submit( Job ( 601 , 3500 , 5000 ));
     p.submit( Job ( 701 , 4600 , 7070 ));
     p.submit( Job ( 801 , 4706 , 6700 ));
-    p.submit( Job ( 901 , 5050 , 9000 ));*/
+    p.submit( Job ( 901 , 5050 , 9000 ));
 
   p.start();
 
 
 
   while(1) {
-    std::this_thread::sleep_for(std::chrono::seconds(5));
+    std::this_thread::sleep_for(std::chrono::milliseconds(simulator_time));
     if(p.job_vector.empty() && p.jobInAct_queue.empty() && (p.anyWorking == 0))
       break;
   }
-
-  std::cout<<"<"<<getTime()<<std::showpoint<<"> "<<"Main end"<<std::endl;
+  std::chrono::duration<double> final = std::chrono::system_clock::now() - mainTime;
+  std::cout<<"<"<<final.count()<<std::showpoint<<"> "<<"Main end"<<std::endl;
   return 0;
 }

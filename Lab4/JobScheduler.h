@@ -16,7 +16,7 @@ public:
     JobScheduler();
     ~JobScheduler();
 
-    std::chrono::system_clock startTime;
+    std::chrono::time_point<std::chrono::system_clock> startTime;
     int anyWorking = 0; //same mutex as jobInAct
 
     std::vector<Job> job_vector;
@@ -32,7 +32,7 @@ public:
     void submit(Job);
     void start();
 
-    void waitToSubmit(Job);
+    void waitToSubmit(Job,double);
     void mainWorkingThreadFunction_aka_EFFE();
 };
 
