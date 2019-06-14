@@ -25,7 +25,7 @@ public:
 
     std::vector<std::thread> thread_vector;
 
-    std::condition_variable jobInAct_conditionVariable_vector; //TODO: learn to manage
+    std::condition_variable jobInAct_conditionVariable; //TODO: learn to manage
     std::mutex jobInAct_queue_mutex;
     std::mutex job_vector_mutex;
 

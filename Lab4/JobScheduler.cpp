@@ -3,6 +3,8 @@
 #include <mutex>
 #include <chrono>
 #include <queue>
+#include <condition_variable>
+#include <atomic>
 
 #include "JobScheduler.h"
 #include "time.h"
@@ -49,7 +51,7 @@ void JobScheduler::submit (Job j) {
 }
 
 void JobScheduler::waitToSubmit(Job j) { //TODO: doesnt work thread+detach?
-    std::this_thread::__sleep_for(std::chrono::seconds(j.start_time/1000),std::chrono::nanoseconds(0));
+    std::this_thread::sleep_for(std::chrono::milliseconds(j.start_time));
     this->job_vector_mutex.lock();
     for(auto it = this->job_vector.begin(); it != this->job_vector.end(); ++it) {
         if(j == *it) {
@@ -88,8 +90,9 @@ void JobScheduler::mainWorkingThreadFunction_aka_EFFE() {
           output_mutex.lock();
           std::cout<<"Thread "<<std::this_thread::get_id()<<" on Job "<<jobWorking.id<<": "<<jobWorking.duration<<" ms remaining"<<std::endl;
           output_mutex.unlock();
-          std::this_thread::__sleep_for(std::chrono::seconds(simulator_time/1000),std::chrono::nanoseconds(0));
+          std::this_thread::sleep_for(std::chrono::milliseconds(simulator_time));
           jobWorking.duration -= simulator_time;
+          jobWorking.execution_time += simulator_time;
           this->jobInAct_queue_mutex.lock();
           this->jobInAct_queue.push(jobWorking);
           this->anyWorking--;
@@ -99,7 +102,8 @@ void JobScheduler::mainWorkingThreadFunction_aka_EFFE() {
           output_mutex.lock();
           std::cout<<"Thread "<<std::this_thread::get_id()<<" on Job "<<jobWorking.id<<": "<<jobWorking.duration<<" ms remaining, end Job"<<std::endl;
           output_mutex.unlock();
-          std::this_thread::__sleep_for(std::chrono::seconds(jobWorking.duration/1000),std::chrono::nanoseconds(0));
+          std::this_thread::sleep_for(std::chrono::milliseconds(jobWorking.duration));
+          jobWorking.execution_time += jobWorking.duration;
           jobWorking.duration = 0;
           this->jobTerminated_vector.push_back(jobWorking);
           this->jobInAct_queue_mutex.lock();
@@ -109,9 +113,10 @@ void JobScheduler::mainWorkingThreadFunction_aka_EFFE() {
       }
       else { //no job ready to execute, wait for start_time //TODO: implement condition_variable to sleep and being awake
         output_mutex.lock();
-        std::cout<<"Thread "<<std::this_thread::get_id()<<" on wait"<<std::endl; //TODO: stalls here
+        std::cout<<"Thread "<<std::this_thread::get_id()<<" on wait"<<std::endl;
         output_mutex.unlock();
-        std::this_thread::__sleep_for(std::chrono::seconds(simulator_time),std::chrono::nanoseconds(0));
+        std::this_thread::sleep_for(std::chrono::milliseconds(simulator_time));
+        //this->jobInAct_conditionVariable.wait_until();
       }
     }
   }

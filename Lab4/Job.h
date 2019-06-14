@@ -13,6 +13,7 @@ public:
     long int wait_time;
     long int completation_time; //TODO: scope for this variable??
     long int start_time;
+    std::chrono::time_point<std::chrono::system_clock> globalStartTime;
 
     Job(int,long int,long int);
     ~Job();
