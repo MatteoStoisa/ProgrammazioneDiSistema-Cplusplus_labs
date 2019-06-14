@@ -11,10 +11,9 @@
 
 int extern threads;
 int extern simulator_time;
+double extern getTime();
 
 std::mutex extern output_mutex;
-
-extern std::string now_str();
 
 JobScheduler::JobScheduler() {
   this->startTime = std::chrono::system_clock();
@@ -27,9 +26,9 @@ JobScheduler::~JobScheduler() {
 }
 
 void JobScheduler::start() {
-    for(int i = 0;i < threads; i++) {
-        this->thread_vector.push_back(std::thread(&JobScheduler::mainWorkingThreadFunction_aka_EFFE,this));
-    }
+  for(int i = 0;i < threads; i++) {
+    this->thread_vector.push_back(std::thread(&JobScheduler::mainWorkingThreadFunction_aka_EFFE,this));
+  }
 }
 
 void JobScheduler::submit (Job j) {
@@ -38,7 +37,7 @@ void JobScheduler::submit (Job j) {
     this->jobInAct_queue.push(j);
     jobInAct_queue_mutex.unlock();
     output_mutex.lock();
-    std::cout<<"Job "<<j.id<<" ready after "<<j.start_time<<" ms"<<std::endl;
+    std::cout<<"<"<<getTime()<<std::showpoint<<"> "<<"Job "<<j.id<<" ready after "<<j.start_time<<" ms"<<std::endl;
     output_mutex.unlock();
   }
   else {
@@ -64,18 +63,18 @@ void JobScheduler::waitToSubmit(Job j) { //TODO: doesnt work thread+detach?
     this->jobInAct_queue.push(j);
     this->jobInAct_queue_mutex.unlock();
     output_mutex.lock();
-    std::cout<<"Job "<<j.id<<" ready after "<<j.start_time<<" ms"<<std::endl;
+    std::cout<<"<"<<getTime()<<std::showpoint<<"> "<<"Job "<<j.id<<" ready after "<<j.start_time<<" ms"<<std::endl;
     output_mutex.unlock();
 }
 
 void JobScheduler::mainWorkingThreadFunction_aka_EFFE() {
   output_mutex.lock();
-  std::cout<<"Thread "<<std::this_thread::get_id()<<" started"<<std::endl;
+  std::cout<<"<"<<getTime()<<std::showpoint<<"> "<<"Thread "<<std::this_thread::get_id()<<" started"<<std::endl;
   output_mutex.unlock();
   while(1) {
     if(this->job_vector.empty() && this->jobInAct_queue.empty() && (this->anyWorking == 0)) { //termination condition
       output_mutex.lock();
-      std::cout<<"Thread "<<std::this_thread::get_id()<<" end for inactivity"<<std::endl;
+      std::cout<<"<"<<getTime()<<std::showpoint<<"> "<<"Thread "<<std::this_thread::get_id()<<" end for inactivity"<<std::endl;
       output_mutex.unlock();
       break;
     }
@@ -88,7 +87,7 @@ void JobScheduler::mainWorkingThreadFunction_aka_EFFE() {
         this->jobInAct_queue_mutex.unlock();
         if(jobWorking.duration > simulator_time) { //work
           output_mutex.lock();
-          std::cout<<"Thread "<<std::this_thread::get_id()<<" on Job "<<jobWorking.id<<": "<<jobWorking.duration<<" ms remaining"<<std::endl;
+          std::cout<<"<"<<getTime()<<std::showpoint<<"> "<<"Thread "<<std::this_thread::get_id()<<" on Job "<<jobWorking.id<<": "<<jobWorking.duration<<" ms remaining"<<std::endl;
           output_mutex.unlock();
           std::this_thread::sleep_for(std::chrono::milliseconds(simulator_time));
           jobWorking.duration -= simulator_time;
@@ -100,7 +99,7 @@ void JobScheduler::mainWorkingThreadFunction_aka_EFFE() {
         }
         else {
           output_mutex.lock();
-          std::cout<<"Thread "<<std::this_thread::get_id()<<" on Job "<<jobWorking.id<<": "<<jobWorking.duration<<" ms remaining, end Job"<<std::endl;
+          std::cout<<"<"<<getTime()<<std::showpoint<<"> "<<"Thread "<<std::this_thread::get_id()<<" on Job "<<jobWorking.id<<": "<<jobWorking.duration<<" ms remaining, end Job"<<std::endl;
           output_mutex.unlock();
           std::this_thread::sleep_for(std::chrono::milliseconds(jobWorking.duration));
           jobWorking.execution_time += jobWorking.duration;
@@ -113,7 +112,7 @@ void JobScheduler::mainWorkingThreadFunction_aka_EFFE() {
       }
       else { //no job ready to execute, wait for start_time //TODO: implement condition_variable to sleep and being awake
         output_mutex.lock();
-        std::cout<<"Thread "<<std::this_thread::get_id()<<" on wait"<<std::endl;
+        std::cout<<"<"<<getTime()<<std::showpoint<<"> "<<"Thread "<<std::this_thread::get_id()<<" on wait"<<std::endl;
         output_mutex.unlock();
         std::this_thread::sleep_for(std::chrono::milliseconds(simulator_time));
         //this->jobInAct_conditionVariable.wait_until();
